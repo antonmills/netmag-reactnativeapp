@@ -35,8 +35,8 @@ var reactnativeapp = React.createClass({
           <View style={styles.centreContainer}>
             <Image source={require('image!weather-sun')} style={styles.weatherIcon} />
             <Text style={styles.weatherText}>20&deg;</Text>
-            <Text style={styles.weatherTextLight}>SYDNEY,</Text>
-            <Text style={styles.weatherTextLight}>AUSTRALIA</Text>
+            <Text style={styles.weatherTextLight}>{DUMMY_DATA.name},</Text>
+            <Text style={styles.weatherTextLight}>{DUMMY_DATA.sys.country}</Text>
           </View>
 
           <View style={styles.copyrightContainer}>
@@ -53,18 +53,16 @@ var styles = StyleSheet.create({
     backgroundColor: BG_HOT
   },
   hamburger: {
-    marginTop: 30,
+    width: 20,
+    height: 15,
     alignSelf: "flex-end",
     marginRight: 15,
-    width: 20,
-    height: 15
+    marginTop: 30,
   },
   centreContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginLeft: -30,
-    marginTop: 30,
-    width: 375,
+    width: 410,
     height: 400,
   },
   weatherIcon: {
@@ -82,8 +80,9 @@ var styles = StyleSheet.create({
     color: "#FFFFFF"
   },
   copyrightContainer: {
-    marginTop: 40,
-    alignItems: "center",
+    alignSelf: "center",
+    // position: "absolute",
+    // bottom: 20
   },
   copyright: {
     fontSize: 14,
