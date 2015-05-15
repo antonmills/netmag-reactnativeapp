@@ -14,10 +14,8 @@ var {
   Image
 } = React;
 
-// constants used for background colors
-var BG_HOT  = "#fb9f4d";
-var BG_WARM = "#fbd84d";
-var BG_COLD = "#00abe6";
+// View declaration
+var WeatherView = require('./App/Views/WeatherView.js');
 
 // to move to API
 var REQUEST_URL = "http://api.openweathermap.org/data/2.5/find?units=metric&q=sydney,australia";
@@ -25,54 +23,49 @@ var DUMMY_DATA = {"message":"accurate","cod":"200","count":1,"list":[{"id":21477
 
 
 var reactnativeapp = React.createClass({
-  getInitialState: function() {
-    return {
-      weatherData: null,
-    };
-  },
-  componentDidMount: function() {
-    this.fetchData();
-  },
-  fetchData: function() {
-    fetch(REQUEST_URL)
-      .then((response) => response.json())
-      .then((responseData) => {
-        this.setState({
-          weatherData: responseData,
-        });
-      })
-      .done();
-  },
-  renderLoadingView: function() {
-    return (
-      <View style={styles.container}>
-        <Text>
-          Loading Data
-        </Text>
-      </View>
-    );
-  },
+  // getInitialState: function() {
+  //   return {
+  //     weatherData: null,
+  //   };
+  // },
+  // componentDidMount: function() {
+  //   this.fetchData();
+  // },
+  // fetchData: function() {
+  //   fetch(REQUEST_URL)
+  //     .then((response) => response.json())
+  //     .then((responseData) => {
+  //       this.setState({
+  //         weatherData: responseData,
+  //       });
+  //     })
+  //     .done();
+  // },
+  // renderLoadingView: function() {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text>
+  //         Loading Data
+  //       </Text>
+  //     </View>
+  //   );
+  // },
   render: function() {
 
     // check if weather data is available
     // if not, render the loading view
-    if (!this.state.weatherData) {
-      return this.renderLoadingView();
-    }
+    // if (!this.state.weatherData) {
+    //   return this.renderLoadingView();
+    // }
 
     // format text used
     var city = DUMMY_DATA.list[0].name.toUpperCase();
     var country = DUMMY_DATA.list[0].sys.country.toUpperCase();
     var temp = parseInt(DUMMY_DATA.list[0].main.temp).toFixed(0);
 
-    // set bg color based on temperature
-    if(temp < 15) {
-      styles.container.backgroundColor = BG_COLD;
-    } else if(temp < 26 && temp > 15) {
-      styles.container.backgroundColor = BG_WARM;
-    } else if(temp > 26) {
-      styles.container.backgroundColor = BG_HOT;
-    }
+
+
+
 
     // render
     return (
@@ -81,12 +74,19 @@ var reactnativeapp = React.createClass({
             <Image source={require('image!hamburger')} style={styles.hamburger}/>
           </View>
 
-          <View style={styles.centreContainer}>
-            <Image source={require('image!weather-sun')} style={styles.weatherIcon} />
-            <Text style={styles.weatherText}>{temp}&deg;</Text>
-            <Text style={styles.weatherTextLight}>{city},</Text>
-            <Text style={styles.weatherTextLight}>{country}</Text>
-          </View>
+          <WeatherView
+              options={
+                {
+                  temperature: temp,
+                  weather: "sunny"
+                }
+              } />
+          // <View style={styles.centreContainer}>
+          //   <Image source={require('image!weather-sun')} style={styles.weatherIcon} />
+          //   <Text style={styles.weatherText}>{temp}&deg;</Text>
+          //   <Text style={styles.weatherTextLight}>{city},</Text>
+          //   <Text style={styles.weatherTextLight}>{country}</Text>
+          // </View>
       </View>
     );
   }
@@ -95,7 +95,11 @@ var reactnativeapp = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BG_COLD
+    backgroundColor: "#ffffff"
+  },
+  containerSun: {
+    flex: 1,
+    backgroundColor: "#ffffff"
   },
   hamburger: {
     width: 20,
@@ -108,20 +112,6 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  weatherIcon: {
-    width: 132,
-    height: 132,
-  },
-  weatherText: {
-    fontSize: 62,
-    fontWeight: "bold",
-    color: "#FFFFFF"
-  },
-  weatherTextLight: {
-    fontSize: 32,
-    fontWeight: "100",
-    color: "#FFFFFF"
   }
 });
 
