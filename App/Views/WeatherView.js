@@ -10,28 +10,25 @@ var {
 } = React;
 
 
-// constants used for background colors
-var BG_HOT  = "#fb9f4d";
-var BG_WARM = "#fbd84d";
-var BG_COLD = "#00abe6";
-
-
 var WeatherView = React.createClass({
 	// the property types to change
 	propTypes: {
-    temperature: React.PropTypes.number,
-    weather: React.PropTypes.string
+		weather: React.PropTypes.string,
+		temperature: React.PropTypes.int,
+		city: React.PropTypes.string,
+		country: React.PropTypes.string
   },
 
 	// the main render
   render: function() {
     var something;
-    return (
+
+		return (
 			<View style={styles.centreContainer}>
 				<Image source={require('image!weather-sun')} style={styles.weatherIcon} />
-				<Text style={styles.weatherText}>20&deg;</Text>
-				<Text style={styles.weatherTextLight}>Sydney,</Text>
-				<Text style={styles.weatherTextLight}>Australia</Text>
+				<Text style={styles.weatherText}>{this.props.temperature}&deg;</Text>
+				<Text style={styles.weatherTextLight}>{this.props.city},</Text>
+				<Text style={styles.weatherTextLight}>{this.props.country}</Text>
 			</View>
     )
   }
