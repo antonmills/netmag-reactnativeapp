@@ -32,13 +32,19 @@ var reactnativeapp = React.createClass({
   getInitialState: function() {
     return {
       weatherData: null,
-      backgroundColour: "#000000"
+      backgroundColour: "#000000",
+      initialPosition: 'unknown'
     };
   },
 
   // when this component is mounted, load weather data from weather api
   componentDidMount: function() {
-    this.fetchData();
+    navigator.geolocation.getCurrentPosition(
+      (initialPosition) => this.setState({initialPosition}),
+      (error) => console.error(error),
+      {enableHighAccuracy: false, timeout: 100, maximumAge: 1000}
+    );
+    //this.fetchData();
   },
   fetchData: function() {
     fetch(REQUEST_URL)
@@ -75,6 +81,11 @@ var reactnativeapp = React.createClass({
   },
 
   render: function() {
+
+    // debug log the location data
+    if(this.state.initialPosition != "unknown") {
+      console.log(this.state.initialPosition);
+    }
 
     // check if weather data is available
     // if not, render the loading view
