@@ -23,7 +23,7 @@ var BG_COLD = "#00abe6";
 var WeatherView = require('./App/Views/WeatherView.js');
 
 // to move to API
-var REQUEST_URL = "http://api.openweathermap.org/data/2.5/find?units=metric&q=sydney,australia";
+var REQUEST_URL = "http://api.openweathermap.org/data/2.5/find?units=metric&q=cardiff,wales";
 
 // create app
 var reactnativeapp = React.createClass({
@@ -45,15 +45,15 @@ var reactnativeapp = React.createClass({
       .then((response) => response.json())
       .then((responseData) => {
 
-        // set the background colour based on temperature
-        var bg = "#00ff00";
+        // set the background colour of the app based on temperature
+        var bg = "#CCCCCC";
         var temp = parseInt(responseData.list[0].main.temp);
-        if(temp < 10) {
-          bg: BG_COLD;
-        } else if(temp >= 10 && temp < 18) {
-          bg: BG_WARM;
-        } else if(temp >= 18) {
-          bg: BG_HOT;
+        if(temp < 14) {
+          bg = BG_COLD;
+        } else if(temp >= 14 && temp < 25) {
+          bg = BG_WARM;
+        } else if(temp >= 25) {
+          bg = BG_HOT;
         }
 
         // update the state with weatherData and a set backgroundColor

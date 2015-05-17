@@ -9,9 +9,20 @@ var {
 	Image
 } = React;
 
+// constants used for weather icons
+var WEATHER_CLEAR = require("image!weather-clear");
+var WEATHER_FEWCLOUDS = require("image!weather-fewclouds");
+var WEATHER_SCATTEREDCLOUD = require("image!weather-scatteredcloud");
+var WEATHER_BROKENCLOUDS = require("image!weather-brokenclouds");
+var WEATHER_DRIZZLE = require("image!weather-drizzle");
+var WEATHER_RAIN = require("image!weather-rain");
+var WEATHER_THUNDERSTORM = require("image!weather-thunderstorm");
+var WEATHER_SNOW = require("image!weather-snow");
+var WEATHER_MIST = require("image!weather-mist");
+
 
 var WeatherView = React.createClass({
-	// the property types to change
+	// the property types set
 	propTypes: {
 		weather: React.PropTypes.string,
 		temperature: React.PropTypes.int,
@@ -19,13 +30,11 @@ var WeatherView = React.createClass({
 		country: React.PropTypes.string
   },
 
-	// the main render
+	// the main render method
   render: function() {
-    var something;
-
 		return (
 			<View style={styles.centreContainer}>
-				<Image source={require('image!weather-sun')} style={styles.weatherIcon} />
+				<Image source={WEATHER_FEWCLOUDS} style={styles.weatherIcon} />
 				<Text style={styles.weatherText}>{this.props.temperature}&deg;</Text>
 				<Text style={styles.weatherTextLight}>{this.props.city},</Text>
 				<Text style={styles.weatherTextLight}>{this.props.country}</Text>
