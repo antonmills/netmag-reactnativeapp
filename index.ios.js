@@ -23,7 +23,7 @@ var BG_COLD = "#00abe6";
 var WeatherView = require('./App/Views/WeatherView.js');
 
 // to move to API
-var REQUEST_URL = "http://api.openweathermap.org/data/2.5/find?units=metric&q=cardiff,wales";
+var REQUEST_URL = "http://api.openweathermap.org/data/2.5/find?units=metric&q=texas,us";
 
 // create app
 var reactnativeapp = React.createClass({
@@ -87,7 +87,7 @@ var reactnativeapp = React.createClass({
     var city = this.state.weatherData.list[0].name.toUpperCase();
     var country = this.state.weatherData.list[0].sys.country.toUpperCase();
     var temp = parseInt(this.state.weatherData.list[0].main.temp).toFixed(0);
-    var weather = "sunny";
+    var weather = this.state.weatherData.list[0].weather[0].icon.toString();
 
     // render
     return (
