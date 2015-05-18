@@ -127,11 +127,6 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#FF1234"
   },
-  centreContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
   loading: {
     flex: 1,
     backgroundColor: "#FFFFFF",
