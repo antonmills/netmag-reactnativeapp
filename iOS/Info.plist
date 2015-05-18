@@ -37,6 +37,6 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>ReactNativeApp would like to use your location</string>
+	<string>WeatherApp would like to use your location</string>
 </dict>
 </plist>

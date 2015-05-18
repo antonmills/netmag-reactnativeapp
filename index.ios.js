@@ -23,7 +23,7 @@ var BG_COLD = "#00abe6";
 var WeatherView = require('./App/Views/WeatherView.js');
 
 // to move to API
-var REQUEST_URL = "http://api.openweathermap.org/data/2.5/find?units=metric&q=texas,us";
+var REQUEST_URL = "http://api.openweathermap.org/data/2.5/weather?units=metric&";//lat=35&lon=139";
 
 // create app
 var reactnativeapp = React.createClass({
@@ -32,7 +32,7 @@ var reactnativeapp = React.createClass({
   getInitialState: function() {
     return {
       weatherData: null,
-      backgroundColour: "#000000",
+      backgroundColour: null,
       initialPosition: 'unknown'
     };
   },
@@ -40,20 +40,27 @@ var reactnativeapp = React.createClass({
   // when this component is mounted, load weather data from weather api
   componentDidMount: function() {
     navigator.geolocation.getCurrentPosition(
-      (initialPosition) => this.setState({initialPosition}),
-      (error) => console.error(error),
-      {enableHighAccuracy: false, timeout: 100, maximumAge: 1000}
-    );
-    //this.fetchData();
+    location => {
+      var formattedURL = REQUEST_URL + "lat=" + location.coords.latitude + "&lon=" + location.coords.longitude;
+      //console.log(formattedURL);
+      this.fetchData(formattedURL);
+    },
+    error => {
+      console.log(error);
+    });
   },
-  fetchData: function() {
-    fetch(REQUEST_URL)
+
+  // fetchdata takes the formattedURL, gets the json data and
+  // sets the apps backgroundColor based on the temperature of
+  // the location
+  fetchData: function(url) {
+    fetch(url)
       .then((response) => response.json())
       .then((responseData) => {
 
         // set the background colour of the app based on temperature
         var bg = "#CCCCCC";
-        var temp = parseInt(responseData.list[0].main.temp);
+        var temp = parseInt(responseData.main.temp);
         if(temp < 14) {
           bg = BG_COLD;
         } else if(temp >= 14 && temp < 25) {
@@ -70,22 +77,21 @@ var reactnativeapp = React.createClass({
       })
       .done();
   },
+
+  // the loading view is a temporary view used while waiting
+  // for the api to return data
   renderLoadingView: function() {
     return (
-      <View style={styles.container}>
-        <Text>
-          Loading Data
+      <View style={styles.loading}>
+        <Text style={styles.loadingText}>
+          Loading Weather Information
         </Text>
       </View>
     );
   },
 
+  // the apps render method renders the WeatherView component and sets it's data
   render: function() {
-
-    // debug log the location data
-    if(this.state.initialPosition != "unknown") {
-      console.log(this.state.initialPosition);
-    }
 
     // check if weather data is available
     // if not, render the loading view
@@ -95,23 +101,21 @@ var reactnativeapp = React.createClass({
 
     // format text used in the state.weatherData variable as these
     // are passed to the WeatherView component
-    var city = this.state.weatherData.list[0].name.toUpperCase();
-    var country = this.state.weatherData.list[0].sys.country.toUpperCase();
-    var temp = parseInt(this.state.weatherData.list[0].main.temp).toFixed(0);
-    var weather = this.state.weatherData.list[0].weather[0].icon.toString();
+    var city = this.state.weatherData.name.toUpperCase();
+    var country = this.state.weatherData.sys.country.toUpperCase();
+    var temp = parseInt(this.state.weatherData.main.temp).toFixed(0);
+    var weather = this.state.weatherData.weather[0].icon.toString();
 
     // render
     return (
       <View style={[styles.container, {backgroundColor: this.state.backgroundColor}]}>
-          <View>
-            <Image source={require('image!hamburger')} style={styles.hamburger}/>
-          </View>
 
           <WeatherView
                 weather={weather}
                 temperature={temp}
                 city={city}
                 country={country} />
+
       </View>
     );
   }
@@ -121,22 +125,24 @@ var reactnativeapp = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#CCCCCC"
-  },
-  containerSun: {
-    flex: 1
-  },
-  hamburger: {
-    width: 20,
-    height: 15,
-    alignSelf: "flex-end",
-    marginRight: 15,
-    marginTop: 30,
+    backgroundColor: "#FF1234"
   },
   centreContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  loading: {
+    flex: 1,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  loadingText: {
+    fontSize: 32,
+    fontWeight: "100",
+    color: "#666666",
+    textAlign: "center"
   }
 });
 

@@ -9,16 +9,28 @@ var {
 	Image
 } = React;
 
-// constants used for weather icons
-var WEATHER_CLEAR = require("image!weather-clear");
-var WEATHER_FEWCLOUDS = require("image!weather-fewclouds");
-var WEATHER_SCATTEREDCLOUD = require("image!weather-scatteredcloud");
-var WEATHER_BROKENCLOUDS = require("image!weather-brokenclouds");
-var WEATHER_DRIZZLE = require("image!weather-drizzle");
-var WEATHER_RAIN = require("image!weather-rain");
-var WEATHER_THUNDERSTORM = require("image!weather-thunderstorm");
-var WEATHER_SNOW = require("image!weather-snow");
-var WEATHER_MIST = require("image!weather-mist");
+// the array of weather icons corresponding to their
+// openweathermap equivalent code. you can see the weather icons at
+// http://openweathermap.org/weather-conditions
+var weatherIconArray = [];
+weatherIconArray["01n"] = require("image!weather-clear");
+weatherIconArray["01d"] = require("image!weather-clear");
+weatherIconArray["02n"] = require("image!weather-fewclouds");
+weatherIconArray["02d"] = require("image!weather-fewclouds");
+weatherIconArray["03n"] = require("image!weather-scatteredcloud");
+weatherIconArray["03d"] = require("image!weather-scatteredcloud");
+weatherIconArray["04n"] = require("image!weather-brokenclouds");
+weatherIconArray["04d"] = require("image!weather-brokenclouds");
+weatherIconArray["09n"] = require("image!weather-drizzle");
+weatherIconArray["09d"] = require("image!weather-drizzle");
+weatherIconArray["10n"] = require("image!weather-rain");
+weatherIconArray["10d"] = require("image!weather-rain");
+weatherIconArray["11n"] = require("image!weather-thunderstorm");
+weatherIconArray["11d"] = require("image!weather-thunderstorm");
+weatherIconArray["13n"] = require("image!weather-snow");
+weatherIconArray["13d"] = require("image!weather-snow");
+weatherIconArray["50n"] = require("image!weather-mist");
+weatherIconArray["50d"] = require("image!weather-mist");
 
 
 var WeatherView = React.createClass({
@@ -31,56 +43,12 @@ var WeatherView = React.createClass({
   },
 
 	// the main render method
+	// note that the image source is set to the array of icons matching the code
+	// returned from the api
   render: function() {
-
-		// switch the icon to the correct constant
-		// you can see the weather icons at
-		// http://openweathermap.org/weather-conditions
-		switch(this.props.weather) {
-			case "01d" || "01n":
-			this.props.weather = WEATHER_CLEAR;
-			break;
-
-			case "02d" || "02n":
-			this.props.weather = WEATHER_FEWCLOUDS;
-			break;
-
-			case "03d" || "03n":
-			this.props.weather = WEATHER_SCATTEREDCLOUD;
-			break;
-
-			case "04d" || "04n":
-			this.props.weather = WEATHER_BROKENCLOUDS;
-			break;
-
-			case "09d" || "09n":
-			this.props.weather = WEATHER_DRIZZLE;
-			break;
-
-			case "10d" || "10n":
-			this.props.weather = WEATHER_RAIN;
-			break;
-
-			case "11d" || "11n":
-			this.props.weather = WEATHER_THUNDERSTORM;
-			break;
-
-			case "13d" || "13n":
-			this.props.weather = WEATHER_SNOW;
-			break;
-
-			case "50d" || "50n":
-			this.props.weather = WEATHER_MIST;
-			break;
-
-			default:
-			this.props.weather = WEATHER_CLEAR;
-			break;
-		}
-
 		return (
 			<View style={styles.centreContainer}>
-				<Image source={this.props.weather} style={styles.weatherIcon} />
+				<Image source={weatherIconArray[this.props.weather]} style={styles.weatherIcon} />
 				<Text style={styles.weatherText}>{this.props.temperature}&deg;</Text>
 				<Text style={styles.weatherTextLight}>{this.props.city},</Text>
 				<Text style={styles.weatherTextLight}>{this.props.country}</Text>
@@ -97,12 +65,14 @@ var styles = StyleSheet.create({
   weatherText: {
     fontSize: 62,
     fontWeight: "bold",
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+		textAlign: "center"
   },
   weatherTextLight: {
     fontSize: 32,
     fontWeight: "100",
-    color: "#FFFFFF"
+    color: "#FFFFFF",
+		textAlign: "center"
   },
 	centreContainer: {
     flex: 1,
