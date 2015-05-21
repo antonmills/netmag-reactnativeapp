@@ -33,8 +33,12 @@ weatherIconArray["50n"] = require("image!weather-mist");
 weatherIconArray["50d"] = require("image!weather-mist");
 
 
+// the components class register
 var WeatherView = React.createClass({
-	// the property types set
+
+	// the state variables that will be used but
+	// also declaration of the propTypes the variables
+	// are expected to be
 	propTypes: {
 		weather: React.PropTypes.string,
 		temperature: React.PropTypes.int,
@@ -42,10 +46,8 @@ var WeatherView = React.createClass({
 		country: React.PropTypes.string
   },
 
-	// the main render method
-	// note that the image source is set to the array of icons matching the code
-	// returned from the api
-  render: function() {
+	// the views render method
+	render: function() {
 		return (
 			<View style={styles.centreContainer}>
 				<Image source={weatherIconArray[this.props.weather]} style={styles.weatherIcon} />
@@ -57,7 +59,13 @@ var WeatherView = React.createClass({
   }
 });
 
+// the components Styles
 var styles = StyleSheet.create({
+	centreContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
 	weatherIcon: {
     width: 132,
     height: 132,
@@ -73,12 +81,8 @@ var styles = StyleSheet.create({
     fontWeight: "100",
     color: "#FFFFFF",
 		textAlign: "center"
-  },
-	centreContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   }
 });
 
+// this components export name is WeatherView
 module.exports = WeatherView;

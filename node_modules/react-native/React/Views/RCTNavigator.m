@@ -60,7 +60,7 @@ NSInteger kNeverProgressed = -10000;
  * or tapping the back button. In both cases, the other system is initially
  * unaware. And in both cases, `RCTNavigator` helps the other side "catch up".
  *
- * If `RCTNavigator` sees the number of react children have changed, it
+ * If `RCTNavigator` sees the number of React children have changed, it
  * pushes/pops accordingly. If `RCTNavigator` sees a `UIKit` driven push/pop, it
  * notifies JavaScript that this has happened, and expects that JavaScript will
  * eventually render more children to match `UIKit`. There's no rush for
@@ -264,9 +264,13 @@ NSInteger kNeverProgressed = -10000;
   NSInteger _numberOfViewControllerMovesToIgnore;
 }
 
+@synthesize paused = _paused;
+
 - (id)initWithBridge:(RCTBridge *)bridge
 {
   if ((self = [super initWithFrame:CGRectZero])) {
+    _paused = YES;
+
     _bridge = bridge;
     _mostRecentProgress = kNeverProgressed;
     _dummyView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -341,14 +345,14 @@ NSInteger kNeverProgressed = -10000;
     _dummyView.frame = (CGRect){{destination}};
     _currentlyTransitioningFrom = indexOfFrom;
     _currentlyTransitioningTo = indexOfTo;
-    [_bridge addFrameUpdateObserver:self];
+    _paused = NO;
   }
   completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
     [weakSelf freeLock];
     _currentlyTransitioningFrom = 0;
     _currentlyTransitioningTo = 0;
     _dummyView.frame = CGRectZero;
-    [_bridge removeFrameUpdateObserver:self];
+    _paused = YES;
     // Reset the parallel position tracker
   }];
 }
@@ -457,6 +461,10 @@ NSInteger kNeverProgressed = -10000;
     //    --- previously caught up --------          ------- still caught up ----------
     viewControllerCount == previousReactCount && currentReactCount == previousReactCount;
 
+BOOL jsGettingtooSlow =
+  //    --- previously not caught up --------          ------- no longer caught up ----------
+  viewControllerCount < previousReactCount && currentReactCount < previousReactCount;
+  
   BOOL reactPushOne = jsGettingAhead && currentReactCount == previousReactCount + 1;
   BOOL reactPopN = jsGettingAhead && currentReactCount < previousReactCount;
 
@@ -467,14 +475,15 @@ NSInteger kNeverProgressed = -10000;
   if (!(jsGettingAhead ||
         jsCatchingUp ||
         jsMakingNoProgressButNeedsToCatchUp ||
-        jsMakingNoProgressAndDoesntNeedTo)) {
+        jsMakingNoProgressAndDoesntNeedTo ||
+        jsGettingtooSlow)) {
     RCTLogError(@"JS has only made partial progress to catch up to UIKit");
   }
   if (currentReactCount > _currentViews.count) {
     RCTLogError(@"Cannot adjust current top of stack beyond available views");
   }
 
-  // Views before the previous react count must not have changed. Views greater than previousReactCount
+  // Views before the previous React count must not have changed. Views greater than previousReactCount
   // up to currentReactCount may have changed.
   for (NSInteger i = 0; i < MIN(_currentViews.count, MIN(_previousViews.count, previousReactCount)); i++) {
     if (_currentViews[i] != _previousViews[i]) {
